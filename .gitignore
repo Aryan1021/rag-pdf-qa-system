@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual Environment
+venv/
+.env/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Vector DB
+vectorstore/
+
+# IDE
+.vscode/
+.idea/
