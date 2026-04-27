@@ -3,6 +3,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.services.pdf_service import extract_text_from_pdf
 from app.services.chunk_service import chunk_text
 from app.services.embedding_service import get_embedding_model
+from app.services.vector_service import create_vector_store
 
 router = APIRouter()
 
@@ -30,16 +31,15 @@ async def upload_pdf(file: UploadFile = File(...)):
 
         # Generate embeddings
         embedding_model = get_embedding_model()
-        texts = [chunk.page_content for chunk in chunks]
 
-        embeddings = embedding_model.embed_documents(texts)
+        # Store in FAISS
+        create_vector_store(chunks, embedding_model)
 
         return {
             "filename": file.filename,
             "pages": extracted_data["pages"],
             "chunks": len(chunks),
-            "embeddings_generated": len(embeddings),
-            "message": "PDF processed and embeddings generated successfully"
+            "message": "PDF processed and stored in vector database"
         }
 
     except Exception as e:
