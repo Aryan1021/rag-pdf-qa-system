@@ -15,6 +15,9 @@ venv/
 # Logs
 *.log
 
+# Data storage
+data/
+
 # Vector DB
 vectorstore/
 
