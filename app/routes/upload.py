@@ -2,6 +2,7 @@ import os
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.services.pdf_service import extract_text_from_pdf
 from app.services.chunk_service import chunk_text
+from app.services.embedding_service import get_embedding_model
 
 router = APIRouter()
 
@@ -27,11 +28,18 @@ async def upload_pdf(file: UploadFile = File(...)):
         # Chunk text
         chunks = chunk_text(extracted_data["documents"])
 
+        # Generate embeddings
+        embedding_model = get_embedding_model()
+        texts = [chunk.page_content for chunk in chunks]
+
+        embeddings = embedding_model.embed_documents(texts)
+
         return {
             "filename": file.filename,
             "pages": extracted_data["pages"],
             "chunks": len(chunks),
-            "message": "PDF processed and chunked successfully"
+            "embeddings_generated": len(embeddings),
+            "message": "PDF processed and embeddings generated successfully"
         }
 
     except Exception as e:
