@@ -1,17 +1,15 @@
 import os
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from app.services.pdf_service import extract_text_from_pdf
 
 router = APIRouter()
 
 UPLOAD_DIR = "data"
-
-# Ensure data directory exists
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 @router.post("/")
 async def upload_pdf(file: UploadFile = File(...)):
-    # Validate file type
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
 
@@ -22,10 +20,13 @@ async def upload_pdf(file: UploadFile = File(...)):
             content = await file.read()
             f.write(content)
 
+        # Extract text
+        extracted_data = extract_text_from_pdf(file_path)
+
         return {
             "filename": file.filename,
-            "message": "File uploaded successfully",
-            "path": file_path
+            "pages": extracted_data["pages"],
+            "message": "PDF uploaded and processed successfully"
         }
 
     except Exception as e:
