@@ -1,6 +1,7 @@
 import os
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.services.pdf_service import extract_text_from_pdf
+from app.services.chunk_service import chunk_text
 
 router = APIRouter()
 
@@ -23,10 +24,14 @@ async def upload_pdf(file: UploadFile = File(...)):
         # Extract text
         extracted_data = extract_text_from_pdf(file_path)
 
+        # Chunk text
+        chunks = chunk_text(extracted_data["documents"])
+
         return {
             "filename": file.filename,
             "pages": extracted_data["pages"],
-            "message": "PDF uploaded and processed successfully"
+            "chunks": len(chunks),
+            "message": "PDF processed and chunked successfully"
         }
 
     except Exception as e:
