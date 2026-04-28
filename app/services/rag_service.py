@@ -9,22 +9,27 @@ def generate_answer(context_chunks, question):
         context = "\n\n".join(context_chunks)
 
         prompt = f"""
-You are a strict and precise AI assistant.
+You are a strict AI assistant.
 
-Rules:
-- Answer ONLY using the given context
-- Be VERY concise (max 4 bullet points)
-- Avoid repetition
-- Focus only on key ideas
-- Do NOT explain unnecessarily
+STRICT RULES (must follow):
+1. Answer ONLY from the given context
+2. Output MUST follow the exact format below
+3. Do NOT write paragraphs
+4. Do NOT combine sentences
+5. Keep everything short
 
-If answer is not found, say:
+FORMAT (STRICT):
+Summary: <one short sentence>
+
+- Point 1
+- Point 2
+- Point 3
+- Point 4
+
+Answer ONLY in the given format. No extra text.
+
+If answer is not found, return:
 "I cannot find the answer in the document."
-
-Format:
-- 3–4 bullet points ONLY
-- Each bullet = one key idea
-- No paragraphs
 
 Context:
 {context}
