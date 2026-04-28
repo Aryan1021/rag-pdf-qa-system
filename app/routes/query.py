@@ -18,7 +18,7 @@ async def query_documents(request: QueryRequest):
         embedding_model = get_embedding_model()
         vector_store = load_vector_store(embedding_model)
 
-        results = vector_store.similarity_search(request.question, k=3)
+        results = vector_store.similarity_search(request.question, k=2)
         retrieved_chunks = [doc.page_content for doc in results]
 
         answer = generate_answer(retrieved_chunks, request.question)
