@@ -1,8 +1,10 @@
 import requests
+from app.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "mistral"
-
 
 def generate_answer(context_chunks, question):
     try:
@@ -49,11 +51,16 @@ Answer:
         response = requests.post(OLLAMA_URL, json=payload)
 
         if response.status_code != 200:
-            raise Exception(f"Ollama Error: {response.text}")
+            logger.error(f"Ollama API error: {response.text}")
+            raise Exception("LLM generation failed")
 
         result = response.json()
+        answer = result.get("response", "").strip()
 
-        return result.get("response", "").strip()
+        logger.info("Answer generated successfully")
+
+        return answer
 
     except Exception as e:
-        raise Exception(f"Error generating answer: {str(e)}")
+        logger.error(f"RAG generation failed: {str(e)}")
+        raise Exception("Failed to generate answer")
