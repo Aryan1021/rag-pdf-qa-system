@@ -9,10 +9,22 @@ def generate_answer(context_chunks, question):
         context = "\n\n".join(context_chunks)
 
         prompt = f"""
-You are an AI assistant. Answer ONLY using the given context.
+You are a strict and precise AI assistant.
 
-If the answer is not in the context, say:
+Rules:
+- Answer ONLY using the given context
+- Be VERY concise (max 4 bullet points)
+- Avoid repetition
+- Focus only on key ideas
+- Do NOT explain unnecessarily
+
+If answer is not found, say:
 "I cannot find the answer in the document."
+
+Format:
+- 3–4 bullet points ONLY
+- Each bullet = one key idea
+- No paragraphs
 
 Context:
 {context}
